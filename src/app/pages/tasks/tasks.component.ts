@@ -83,7 +83,7 @@ export class TasksComponent implements OnInit {
       error: (err: any) => {
         Swal.fire({
           title: "Tarea",
-          text: "No se eliminó ninguna tarea, puede que no exista o esté en estado Pendiente",
+          text: "No se eliminó la tarea porque está en estado Pendiente",
           icon: 'error',
           confirmButtonText: 'Ok',
           showConfirmButton: true,
@@ -94,7 +94,6 @@ export class TasksComponent implements OnInit {
       },
     });
   }
-
 
   updadeStateTask(row: any) {
     const data = { status: 'C' }

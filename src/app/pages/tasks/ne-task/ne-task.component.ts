@@ -10,7 +10,7 @@ import { TasksService } from 'src/app/services/tasks/tasks.service';
   templateUrl: './ne-task.component.html',
   styleUrls: ['./ne-task.component.scss']
 })
-export class NeTaskComponent implements OnInit{
+export class NeTaskComponent implements OnInit {
 
   taskForm!: FormGroup;
   constructor(
@@ -19,30 +19,32 @@ export class NeTaskComponent implements OnInit{
     private _taskService: TasksService,
     public dialogRef: MatDialogRef<any>,
     @Inject(MAT_DIALOG_DATA) public data?: any,
-  )
-  {}
+  ) { }
 
   ngOnInit(): void {
-    console.log(this.data)
     this.constructorForm();
   }
 
-  constructorForm(){
+  constructorForm() {
     this.taskForm = this.fb.group({
-      title: [this.data ? this.data.title : '', [Validators.required,Validators.minLength(5)]],
+      title: [this.data ? this.data.title : '', [Validators.required, Validators.minLength(5)]],
       description: [this.data ? this.data.description : '']
     })
   }
 
-  save(){
+  close() {
+    this.dialogRef.close();
+  }
+
+  save() {
     if (this.taskForm.valid) {
       let dataTask = {
         title: this.taskForm.get('title')?.value,
-        description:this.taskForm.get('description')?.value,
+        description: this.taskForm.get('description')?.value,
       }
       if (this.data?.id) {
         this._taskService.updateTasks(this.data?.id, dataTask).subscribe({
-          next:(res:any)=>{
+          next: (res: any) => {
             Swal.fire({
               title: "Tarea",
               text: "Se ha actualizado exitosamente la tarea",
@@ -51,13 +53,27 @@ export class NeTaskComponent implements OnInit{
               showConfirmButton: true,
               showDenyButton: false
             }).then((result) => {
-              this.dialogRef.close();
+              this.close();
             });
+          },
+          error: (err: any) => {
+            if (err.error.code === 3) {
+              Swal.fire({
+                title: "Tarea",
+                text: "No se puedo actualizar la tarea porque el nombre ya existe",
+                icon: 'info',
+                confirmButtonText: 'Ok',
+                showConfirmButton: true,
+                showDenyButton: false
+              }).then((result) => {
+                this.close();
+              });
+            }
           }
         })
       } else {
         this._taskService.createTasks(dataTask).subscribe({
-          next:(res:any)=>{
+          next: (res: any) => {
             Swal.fire({
               title: "Tarea",
               text: "Se ha creado exitosamente la tarea",
@@ -66,8 +82,22 @@ export class NeTaskComponent implements OnInit{
               showConfirmButton: true,
               showDenyButton: false
             }).then((result) => {
-              this.dialogRef.close();
+              this.close();
             });
+          },
+          error: (err: any) => {
+            if (err.error.code === 3) {
+              Swal.fire({
+                title: "Tarea",
+                text: "No se puedo crear la tarea porque el nombre ya existe",
+                icon: 'info',
+                confirmButtonText: 'Ok',
+                showConfirmButton: true,
+                showDenyButton: false
+              }).then((result) => {
+                this.close();
+              });
+            }
           }
         })
       }

@@ -1,53 +1,74 @@
-<div class="overflow-hidden shadow-md rounded-lg">
-  <div class="p-4 flex justify-end">
-    <button mat-icon-button color="primary" (click)="addTask()">
+<div class="p-4 space-y-4">
+  <div class="flex justify-between items-center mb-4">
+    <button mat-raised-button color="primary" (click)="addTask()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
       <mat-icon>add</mat-icon>
+      <span class="ml-2">Añadir Tarea</span>
     </button>
   </div>
-  <table mat-table [dataSource]="dataSource" matSort class="w-full">
 
-    <!-- ID Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"> ID </th>
-      <td mat-cell *matCellDef="let row" class="px-6 py-4 whitespace-nowrap"> {{row.id}} </td>
-    </ng-container>
+  <div class="overflow-x-auto rounded-lg shadow">
+    <table mat-table [dataSource]="dataSource" matSort class="w-full">
 
-    <!-- Title Column -->
-    <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"> Título </th>
-      <td mat-cell *matCellDef="let row" class="px-6 py-4 whitespace-nowrap"> {{row.title}} </td>
-    </ng-container>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+          class="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider"> ID </th>
+        <td mat-cell *matCellDef="let row" class="px-6 py-4 whitespace-nowrap text-sm text-white"> {{row.id}} </td>
+      </ng-container>
 
-    <!-- Description Column -->
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"> Descripción </th>
-      <td mat-cell *matCellDef="let row" class="px-6 py-4 whitespace-nowrap"> {{row.description}} </td>
-    </ng-container>
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+          class="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider"> Título </th>
+        <td mat-cell *matCellDef="let row" class="px-6 py-4 whitespace-nowrap text-sm text-white"> {{row.title}} </td>
+      </ng-container>
 
-    <!-- Status Column -->
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"> Estado </th>
-      <td mat-cell *matCellDef="let row" class="px-6 py-4 whitespace-nowrap"> {{row.status}} </td>
-    </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+          class="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider"> Descripción </th>
+        <td mat-cell *matCellDef="let row" class="px-6 py-4 whitespace-nowrap text-sm text-white"> {{row.description}}
+        </td>
+      </ng-container>
 
-    <!-- Actions Column -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"> Acciones </th>
-      <td mat-cell *matCellDef="let row" class="px-6 py-4 whitespace-nowrap">
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="editTask(row)">Editar</button>
-          <button mat-menu-item (click)="updadeStateTask(row)">Completar Tarea</button>
-          <button mat-menu-item (click)="deleteTask(row)">Eliminar</button>
-        </mat-menu>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header
+          class="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider"> Estado </th>
+        <td mat-cell *matCellDef="let row" class="px-6 py-4 whitespace-nowrap">
+          <span
+            [ngClass]="{'bg-green-100 text-green-800': row.status === 'Completada', 'bg-yellow-100 text-yellow-800': row.status === 'Pendiente'}"
+            class="px-2 py-1 text-xs font-semibold rounded-full">
+            {{row.status}}
+          </span>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="bg-white border-b hover:bg-gray-50"></tr>
-  </table>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef
+          class="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider"> Acciones </th>
+        <td mat-cell *matCellDef="let row" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+          <button mat-icon-button [matMenuTriggerFor]="menu" class="text-gray-600 hover:text-gray-900">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editTask(row)">
+              <mat-icon>edit</mat-icon>
+              <span>Editar</span>
+            </button>
+            <button *ngIf="row.status === 'Pendiente'" mat-menu-item (click)="updadeStateTask(row)">
+              <mat-icon>check_circle</mat-icon>
+              <span>Completar Tarea</span>
+            </button>
+            <button mat-menu-item (click)="deleteTask(row)">
+              <mat-icon>delete</mat-icon>
+              <span>Eliminar</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" class=""></mat-paginator>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="bg-white border-b hover:bg-gray-50"></tr>
+    </table>
+  </div>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" class="mt-4"></mat-paginator>
 </div>
