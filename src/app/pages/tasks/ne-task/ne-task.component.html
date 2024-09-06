@@ -15,6 +15,9 @@
           <mat-error *ngIf="taskForm.get('title')?.hasError('required') && taskForm.get('title')?.touched">
             El titulo es requerido.
           </mat-error>
+          <mat-error *ngIf="taskForm.get('title')?.hasError('minlength') && taskForm.get('title')?.touched">
+            El titulo tiene un número minimo de 5 digitos.
+          </mat-error>
         </mat-form-field>
       </div>
 

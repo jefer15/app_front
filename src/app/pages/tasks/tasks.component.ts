@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss']
 })
-export class TasksComponent implements OnInit{
+export class TasksComponent implements OnInit {
   displayedColumns: string[] = ['id', 'title', 'description', 'status', 'actions'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
 
@@ -20,15 +20,22 @@ export class TasksComponent implements OnInit{
   constructor(
     private _tasksService: TasksService,
     private _dialog: MatDialog,
-  ){}
+  ) { }
   ngOnInit(): void {
     this.getData()
   }
 
-  getData(){
+  getData() {
     this._tasksService.tasks().subscribe({
-      next:(res:any)=>{
-        this.dataSource.data = res.data;
+      next: (res: any) => {
+        const transformedData = res.data.map((task: any) => {
+          return {
+            ...task,
+            status: task.status === 'P' ? 'Pendiente' : task.status === 'C' ? 'Completada' : task.status
+          };
+        });
+
+        this.dataSource.data = transformedData;
       }
     })
   }
@@ -37,7 +44,7 @@ export class TasksComponent implements OnInit{
     this.dataSource.paginator = this.paginator;
   }
 
-  addTask(){
+  addTask() {
     const dialogRef = this._dialog.open(NeTaskComponent, {
       width: "80%",
       height: "85%",
@@ -52,7 +59,7 @@ export class TasksComponent implements OnInit{
       width: "80%",
       height: "85%",
       maxWidth: "80%",
-      data:row
+      data: row
     });
     dialogRef.afterClosed().subscribe((data) => {
       this.getData();
@@ -89,10 +96,10 @@ export class TasksComponent implements OnInit{
   }
 
 
-  updadeStateTask(row:any){
-    const data = {status: 'C'}
+  updadeStateTask(row: any) {
+    const data = { status: 'C' }
     this._tasksService.updateStatusTasks(row.id, data).subscribe({
-      next:(res:any)=>{
+      next: (res: any) => {
         Swal.fire({
           title: "Tarea",
           text: "Se ha completado exitosamente la tarea",

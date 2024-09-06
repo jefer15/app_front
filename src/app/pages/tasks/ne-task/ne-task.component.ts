@@ -29,7 +29,7 @@ export class NeTaskComponent implements OnInit{
 
   constructorForm(){
     this.taskForm = this.fb.group({
-      title: [this.data ? this.data.title : '', Validators.required],
+      title: [this.data ? this.data.title : '', [Validators.required,Validators.minLength(5)]],
       description: [this.data ? this.data.description : '']
     })
   }

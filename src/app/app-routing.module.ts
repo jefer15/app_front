@@ -11,7 +11,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/tasks/tasks.module').then((m) => m.TasksModule)
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' }, // Redirección a la ruta de login o página principal por defecto
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
 
 @NgModule({
