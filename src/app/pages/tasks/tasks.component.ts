@@ -61,7 +61,7 @@ export class TasksComponent implements OnInit{
 
   deleteTask(row: any) {
     this._tasksService.deleteTasks(row.id).subscribe({
-      next:(res:any)=>{
+      next: (res: any) => {
         Swal.fire({
           title: "Tarea",
           text: "Se ha eliminado exitosamente la tarea",
@@ -72,9 +72,22 @@ export class TasksComponent implements OnInit{
         }).then((result) => {
           this.getData();
         });
-      }
-    })
+      },
+      error: (err: any) => {
+        Swal.fire({
+          title: "Tarea",
+          text: "No se eliminó ninguna tarea, puede que no exista o esté en estado Pendiente",
+          icon: 'error',
+          confirmButtonText: 'Ok',
+          showConfirmButton: true,
+          showDenyButton: false
+        }).then((result) => {
+          this.getData();
+        });
+      },
+    });
   }
+
 
   updadeStateTask(row:any){
     const data = {status: 'C'}
