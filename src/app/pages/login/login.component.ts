@@ -45,16 +45,7 @@ export class LoginComponent implements OnInit {
 
     this._loginService.login(data).subscribe({
       next: (res:any)=>{
-        if(res.code == 3) {
-          Swal.fire({
-            title: "Error en la autenticación",
-            text: "Datos incorrectos o Usuario no existente",
-            icon: 'warning',
-            confirmButtonText: 'Cerrar',
-            showConfirmButton: true,
-            showDenyButton: false
-          })
-        } else {
+        if(res.code == 1) {
           Swal.fire({
             title: "Login Exitoso",
             text: "A continuación entrará a la plataforma",
@@ -63,8 +54,17 @@ export class LoginComponent implements OnInit {
             showConfirmButton: true,
             showDenyButton: false
           }).then((result) => {
-            this.router.navigate([''])
+            this.router.navigate(['/tasks'])
           });
+        } else {
+          Swal.fire({
+            title: "Error en la autenticación",
+            text: "Datos incorrectos o Usuario no existente",
+            icon: 'warning',
+            confirmButtonText: 'Cerrar',
+            showConfirmButton: true,
+            showDenyButton: false
+          })
         }
       },
       error:()=>{

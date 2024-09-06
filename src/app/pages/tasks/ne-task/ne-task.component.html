@@ -10,7 +10,7 @@
             type="text"
             formControlName="title"
             class="mt-1 block w-full"
-            maxlength="12"
+            maxlength="50"
           />
           <mat-error *ngIf="taskForm.get('title')?.hasError('required') && taskForm.get('title')?.touched">
             El titulo es requerido.
