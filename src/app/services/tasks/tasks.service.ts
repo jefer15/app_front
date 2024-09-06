@@ -31,14 +31,14 @@ export class TasksService {
 
   updateTasks(id:number, data: any) {
     const url = `${environment.uri}${this.path}/${id}`;
-    return this._http.post(url, data).pipe(map((response: any) => {
+    return this._http.put(url, data).pipe(map((response: any) => {
       return response;
     }));
   }
 
   updateStatusTasks(id:number, data: any) {
     const url = `${environment.uri}${this.path}/status/${id}`;
-    return this._http.post(url, data).pipe(map((response: any) => {
+    return this._http.put(url, data).pipe(map((response: any) => {
       return response;
     }));
   }
