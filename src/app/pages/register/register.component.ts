@@ -1,64 +1,102 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
-// import { ToastrService } from 'ngx-toastr';
-// import { Usuario } from 'src/app/models/usuario';
-// import { UsuarioService } from 'src/app/services/usuario.service';
+import { LoginService } from 'src/app/services/login/login.service';
+import Swal from 'sweetalert2';
+import { sha256 } from 'js-sha256';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
-  register: FormGroup;
-  loading = false;
+  registerForm!: FormGroup;
+  typePassword = "password";
+  typePassword2 = "password";
 
   constructor(
     private fb: FormBuilder,
-    // private usuarioService: UsuarioService,
+    private _loginService: LoginService,
     private router: Router,
-    // private toastR: ToastrService
-  ) {
-    this.register = this.fb.group(
-      {
-        usuario: ['', Validators.required],
-        password: ['', [Validators.required, Validators.minLength(4)]],
-        confirmPassword: [''],
-      },
-      { validators: this.checkPassword }
-    );
+  ) {}
+
+  ngOnInit(): void {
+    this.registerForm = this.fb.group({
+      identification: ['',  [Validators.required, Validators.minLength(7)]],
+      name: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [
+        Validators.required,
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)
+      ]],
+      confirmPassword: ['', Validators.required]
+    }, { validators: this.passwordsMatchValidator });
   }
 
-  //Metodo registrar usuario
-  registrarUsuario(): void {
-    console.log(this.register);
+  register() {
+    if (!this.registerForm.valid) {
+      Swal.fire({
+        title: "Registro",
+        text: "Datos incorrectos.",
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+        showConfirmButton: true,
+        showDenyButton: false
+      })
+      return
+    }
 
-    // const usuario: Usuario = {
-    //   nombreUsuario: this.register.value.usuario,
-    //   password: this.register.value.password,
-    // };
+    const hashedPassword = sha256.update(this.registerForm.get('password')?.value).hex();
+    const data = {
+      identification:this.registerForm.get('identification')?.value,
+      name:this.registerForm.get('name')?.value,
+      lastName:this.registerForm.get('lastName')?.value,
+      email:this.registerForm.get('email')?.value,
+      password:hashedPassword
+    }
 
-    this.loading = true;
+    this._loginService.register(data).subscribe({
+      next:(res:any)=>{
+        Swal.fire({
+          title: "Registro Exitoso",
+          text: "A continuación podrá loguearse.",
+          icon: 'success',
+          confirmButtonText: 'Ok',
+          showConfirmButton: true,
+          showDenyButton: false
+        }).then((result) => {
+          this.login()
+        });
+      }, error:()=>{
+        Swal.fire({
+          title: "Registro",
+          text: "Ocurrió un error, intente nuevamente.",
+          icon: 'info',
+          confirmButtonText: 'Cerrar',
+          showConfirmButton: true,
+          showDenyButton: false
+        })
+      }
+    })
 
-    // this.usuarioService.saveUser(usuario).subscribe((data) => {
-    //   console.log(data);
-    //   this.toastR.success("El usuario "+ usuario.nombreUsuario +" fue registrado con éxito", "Usuario registrado");
-    //   this.router.navigate(['/inicio/login']);
-    //   this.loading = false;
-    // }, error => {
-    //   this.loading = false;
-    //   console.log(error);
-    //   this.toastR.error(error.error.message, "Error registrar usuario!");
-    //   this.register.reset();
-    // });
   }
 
-  //Metodo confirmar password
-  checkPassword(group: FormGroup): any {
-    const pass = group.get('password')?.value;
-    const confirmPass = group.get('confirmPassword')?.value;
+  login() {
+    this.router.navigate(['/login'])
+  }
 
-    return pass === confirmPass ? null : { notSame: true };
+  seePassword() {
+    this.typePassword = (this.typePassword == "password") ? "text" : "password";
+  }
+  seePassword2() {
+    this.typePassword2 = (this.typePassword2 == "password") ? "text" : "password";
+  }
+
+  passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordsMismatch: true };
   }
 }
