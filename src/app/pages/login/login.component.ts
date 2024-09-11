@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from 'src/app/services/login/login.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { sha256 } from 'js-sha256';
 
 @Component({
   selector: 'app-login',
@@ -38,9 +39,11 @@ export class LoginComponent implements OnInit {
   }
 
   login(){
+    const hashedPassword = sha256.update(this.loginForm.get('password')?.value).hex();
+
     const data = {
       identification:this.loginForm.get('identification')?.value,
-      password:this.loginForm.get('password')?.value
+      password:hashedPassword
     }
 
     this._loginService.login(data).subscribe({

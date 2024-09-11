@@ -1,17 +1,42 @@
-import { Component, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
+import { DashboardComponent } from './layout/dashboard/dashboard.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   { path: 'login',
     loadChildren: () =>
       import('./pages/login/login.module').then((m) => m.LoginModule)
   },
-  { path: 'tasks',
-    loadChildren: () =>
-      import('./pages/tasks/tasks.module').then((m) => m.TasksModule)
+  {
+    path: "register",
+    loadChildren:() =>
+      import('./pages/register/register.module').then((m) => m.RegisterModule)
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  { path: '', component: DashboardComponent,
+    children: [
+      {
+        path: 'files',
+        loadChildren: () => import('./pages/files/files.module').then((m) => m.FilesModule)
+      },
+      {
+        path: 'users',
+        loadChildren: () => import('./pages/user/user.module').then((m) => m.UserModule)
+      },
+      {
+        path: 'tasks',
+        loadChildren: () => import('./pages/tasks/tasks.module').then((m) => m.TasksModule)
+      },
+    ],
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "**",
+    loadChildren: () =>
+      import("./pages/not-found/not-found.module").then((m) => m.NotFoundModule
+      ),
+  },
 ];
 
 @NgModule({

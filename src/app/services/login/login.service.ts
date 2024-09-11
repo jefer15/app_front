@@ -26,6 +26,13 @@ export class LoginService {
     }));
   }
 
+  register(data: any) {
+    const url = `${environment.uri}${this.path}/register`;
+    return this._http.post(url, data).pipe(map((response: any) => {
+      return response;
+    }));
+  }
+
   getToken(): string | null {
     return localStorage.getItem('token');
   }
@@ -42,5 +49,21 @@ export class LoginService {
   setUser(user: any): void {
     localStorage.setItem('user', JSON.stringify(user));
     this.userSubject.next(user);
+  }
+
+  logoutUser(): void {
+    localStorage.clear();
+    sessionStorage.clear();
+    this.tokenSubject.next(null);
+    this.userSubject.next(null);
+    this.router.navigate(["/login"]);
+  }
+
+  getTokenSubject(): BehaviorSubject<string | null> {
+    return this.tokenSubject;
+  }
+
+  getUserSubject(): BehaviorSubject<any> {
+    return this.userSubject;
   }
 }

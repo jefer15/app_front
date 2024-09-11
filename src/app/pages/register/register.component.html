@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="row" style="width: 100%;">
+      <div class="col-lg-6 offset-lg-3">
+          <div class="card text-center" style="padding: 20px;">
+              <h3>Registrarse</h3>
+
+              <form [formGroup]="register" (ngSubmit)="registrarUsuario()" class="pt-2">
+                  <div class="form-group mb-2" style="text-align: start;">
+                      <input type="text" class="form-control" placeholder="Usuario" formControlName="usuario">
+                      <span class="text-danger ms-2"
+                      *ngIf="register.get('usuario')?.hasError('required') && register.get('usuario')?.touched">
+                          El usuario es <strong>requerido</strong>
+                      </span>
+                  </div>
+
+                  <div class="form-group mb-2" style="text-align: start;">
+                      <input type="password" class="form-control" placeholder="Contraseña" formControlName="password">
+                      <span class="text-danger ms-2"
+                      *ngIf="register.get('password')?.hasError('required') && register.get('password')?.touched">
+                          La contraseña es <strong>requerida</strong>
+                      </span>
+                      <span class="text-danger ms-2"
+                      *ngIf="register.get('password')?.hasError('minlength') && register.get('password')?.touched">
+                          La contraseña debe tener como <strong>mínimo 4 caracteres</strong>
+                      </span>
+                  </div>
+
+
+                  <div class="form-group mb-2" style="text-align: start;">
+                      <input type="password" class="form-control" placeholder="Repetir contraseña" formControlName="confirmPassword">
+
+                      <span class="text-danger ms-2"
+                      *ngIf="register.hasError('notSame') && register.get('confirmPassword')?.touched">
+                          Contraseñas <strong>distintas</strong>
+                      </span>
+                  </div>
+
+                  <div class="form-group">
+                      <button class="btn btn-primary ms-2 btn-reg" type="submit" [disabled]="register.invalid">Aceptar</button>
+                      <button class="btn btn-secondary ms-2" routerLink="/inicio/login">Cancelar</button>
+                  </div>
+
+              </form>
+          </div>
+
+
+      </div>
