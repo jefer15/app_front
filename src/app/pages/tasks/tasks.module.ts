@@ -25,7 +25,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     CommonModule,
     TasksRoutingModule,
     MatTableModule,
-    MatPaginatorModule,  // Añade esta línea
+    MatPaginatorModule,
     MatSortModule,
     MatMenuModule,
     MatIconModule,

@@ -26,13 +26,6 @@ export class LoginService {
     }));
   }
 
-  register(data: any) {
-    const url = `${environment.uri}${this.path}/register`;
-    return this._http.post(url, data).pipe(map((response: any) => {
-      return response;
-    }));
-  }
-
   getToken(): string | null {
     return localStorage.getItem('token');
   }

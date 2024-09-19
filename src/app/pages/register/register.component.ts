@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoginService } from 'src/app/services/login/login.service';
 import Swal from 'sweetalert2';
 import { sha256 } from 'js-sha256';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +17,7 @@ export class RegisterComponent {
 
   constructor(
     private fb: FormBuilder,
-    private _loginService: LoginService,
+    private _userService: UserService,
     private router: Router,
   ) {}
 
@@ -57,7 +57,7 @@ export class RegisterComponent {
       password:hashedPassword
     }
 
-    this._loginService.register(data).subscribe({
+    this._userService.register(data).subscribe({
       next:(res:any)=>{
         Swal.fire({
           title: "Registro Exitoso",
