@@ -37,7 +37,17 @@ export class NeTaskComponent implements OnInit {
   }
 
   save() {
-    if (this.taskForm.valid) {
+    if (!this.taskForm.valid) {
+      Swal.fire({
+        title: "Tarea",
+        text: "Datos incorrectos.",
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+        showConfirmButton: true,
+        showDenyButton: false
+      })
+      return
+    }
       let dataTask = {
         title: this.taskForm.get('title')?.value,
         description: this.taskForm.get('description')?.value,
@@ -101,7 +111,6 @@ export class NeTaskComponent implements OnInit {
           }
         })
       }
-    }
 
   }
 }
