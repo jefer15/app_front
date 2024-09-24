@@ -40,17 +40,6 @@ export class UserComponent implements OnInit{
     this.dataSource.paginator = this.paginator;
   }
 
-  addUser(){
-    const dialogRef = this._dialog.open(NewUserComponent, {
-      width: "80%",
-      height: "85%",
-      maxWidth: "80%",
-    });
-    dialogRef.afterClosed().subscribe((data) => {
-      this.getData();
-    });
-  }
-
   editUser(row:any){
     const dialogRef = this._dialog.open(NewUserComponent, {
       width: "80%",

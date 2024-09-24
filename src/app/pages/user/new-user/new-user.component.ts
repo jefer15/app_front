@@ -15,6 +15,7 @@ export class NewUserComponent implements OnInit {
   registerForm!: FormGroup;
   typePassword = "password";
   typePassword2 = "password";
+  edit: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -25,25 +26,22 @@ export class NewUserComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data)
+    this.constructorForm();
+  }
 
+  constructorForm() {
     this.registerForm = this.fb.group({
-      identification: [this.data ? this.data.identification : '',  [Validators.required, Validators.minLength(7)]],
+      identification: [this.data ? this.data.identification : '', [Validators.required, Validators.minLength(7)]],
       name: [this.data ? this.data.name : '', Validators.required],
       lastName: [this.data ? this.data.lastName : '', Validators.required],
       email: [this.data ? this.data.email : '', [Validators.required, Validators.email]],
-      password: ['', [
-        Validators.required,
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)
-      ]],
-      confirmPassword: ['', Validators.required]
-    }, { validators: this.passwordsMatchValidator });
+    })
   }
 
   save() {
     if (!this.registerForm.valid) {
       Swal.fire({
-        title: "Registro",
+        title: "Usuarios",
         text: "Datos incorrectos.",
         icon: 'warning',
         confirmButtonText: 'Cerrar',
@@ -53,70 +51,38 @@ export class NewUserComponent implements OnInit {
       return
     }
 
-    const hashedPassword = sha256.update(this.registerForm.get('password')?.value).hex();
-    const data = {
-      identification:this.registerForm.get('identification')?.value,
-      name:this.registerForm.get('name')?.value,
-      lastName:this.registerForm.get('lastName')?.value,
-      email:this.registerForm.get('email')?.value,
-      password:hashedPassword
+    const dataUser = {
+      identification: this.registerForm.get('identification')?.value,
+      name: this.registerForm.get('name')?.value,
+      lastName: this.registerForm.get('lastName')?.value,
+      email: this.registerForm.get('email')?.value,
     }
-
-    if (this.data?.id) {
-      this._userService.updateUser(this.data?.id,this.data).subscribe({
-        next:(res:any)=>{
-          Swal.fire({
-            title: "Usuarios",
-            text: "Se ha actualizado exitosamente el usuario",
-            icon: 'success',
-            confirmButtonText: 'Ok',
-            showConfirmButton: true,
-            showDenyButton: false
-          }).then((result) => {
-            this.close()
-          });
-        },
-        error: () =>{
-          Swal.fire({
-            title: "Registro",
-            text: "Ocurrió un error, intente nuevamente.",
-            icon: 'info',
-            confirmButtonText: 'Cerrar',
-            showConfirmButton: true,
-            showDenyButton: false
-          }).then((result)=>{
-            this.close
-          })
-        }
-      })
-
-    } else {
-      this._userService.register(data).subscribe({
-        next:(res:any)=>{
-          Swal.fire({
-            title: "Usuarios",
-            text: "Se ha creado exitosamente el usuario",
-            icon: 'success',
-            confirmButtonText: 'Ok',
-            showConfirmButton: true,
-            showDenyButton: false
-          }).then((result) => {
-            this.close()
-          });
-        }, error:()=>{
-          Swal.fire({
-            title: "Registro",
-            text: "Ocurrió un error, intente nuevamente.",
-            icon: 'info',
-            confirmButtonText: 'Cerrar',
-            showConfirmButton: true,
-            showDenyButton: false
-          }).then((result)=>{
-            this.close
-          })
-        }
-      })
-    }
+    this._userService.updateUser(this.data?.id, dataUser).subscribe({
+      next: (res: any) => {
+        Swal.fire({
+          title: "Usuarios",
+          text: "Se ha actualizado exitosamente el usuario",
+          icon: 'success',
+          confirmButtonText: 'Ok',
+          showConfirmButton: true,
+          showDenyButton: false
+        }).then((result) => {
+          this.close()
+        });
+      },
+      error: () => {
+        Swal.fire({
+          title: "Registro",
+          text: "Ocurrió un error, intente nuevamente.",
+          icon: 'info',
+          confirmButtonText: 'Cerrar',
+          showConfirmButton: true,
+          showDenyButton: false
+        }).then((result) => {
+          this.close
+        })
+      }
+    })
   }
 
   seePassword() {
