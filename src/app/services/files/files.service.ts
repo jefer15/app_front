@@ -10,11 +10,18 @@ import { Router } from "@angular/router";
 })
 export class FilesService {
 
-  path = "/files";
+  path = "/inventory";
   constructor(private _http: HttpClient, private router: Router) { }
 
-  register(data: any) {
-    const url = `${environment.uri}${this.path}/register`;
+  inventories() {
+    const url = `${environment.uri}${this.path}`;
+    return this._http.get(url).pipe(map((response: any) => {
+      return response;
+    }));
+  }
+
+  createInventory(data:any) {
+    const url = `${environment.uri}${this.path}`;
     return this._http.post(url, data).pipe(map((response: any) => {
       return response;
     }));
