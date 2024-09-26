@@ -41,8 +41,16 @@ export class FilesComponent implements OnInit{
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (file) {
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    if (file && fileExtension === 'xlsx') {
       this.readExcelFile(file);
+    } else {
+      Swal.fire({
+        title: "Error",
+        text: "Archivo incorrecto, por favor suba un formato de excel.",
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      });
     }
   }
 
@@ -60,20 +68,31 @@ export class FilesComponent implements OnInit{
   }
 
   processExcelData(jsonData: any[]) {
-    // Aquí puedes procesar los datos según tus necesidades
-    console.log('Datos del Excel:', jsonData);
+    const inventoryData = jsonData.map(row => ({
+      idOrganization: row.idOrganization,
+      transactionType: row.transactionType,
+      quantity: row.quantity,
+      unitPrice: row.unitPrice,
+      address: row.address,
+      description: row.description,
+      mark: row.mark,
+      transactionDate: this.excelDateToJSDate(row.transactionDate)
+    }));
+    this.addInventory(inventoryData);
+  }
 
-    // Ejemplo de cómo podrías estructurar los datos para enviarlos al servidor
-    // const inventoryData = jsonData.map(row => ({
-    //   nameOrganization: row['Nombre de la Organización'],
-    //   transactionType: row['Tipo de transacción'],
-    //   description: row['Descripción']
-    // }));
-
-    // this.addInventory(inventoryData);
+  excelDateToJSDate(excelDate: number): string {
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+    const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+    const jsDate = new Date(excelEpoch.getTime() + excelDate * millisecondsPerDay);
+    const year = jsDate.getUTCFullYear();
+    const month = String(jsDate.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(jsDate.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   addInventory(inventoryData: any[]) {
+    console.log("data:",inventoryData)
     // this._filesService.createInventory(inventoryData).subscribe({
     //   next: (res: any) => {
     //     Swal.fire({
@@ -88,7 +107,6 @@ export class FilesComponent implements OnInit{
     //     });
     //   },
     //   error: (err) => {
-    //     console.error('Error al guardar el inventario:', err);
     //     Swal.fire({
     //       title: "Error",
     //       text: "No se pudo guardar el inventario",
