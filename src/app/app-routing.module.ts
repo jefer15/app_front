@@ -28,6 +28,10 @@ const routes: Routes = [
         path: 'tasks',
         loadChildren: () => import('./pages/tasks/tasks.module').then((m) => m.TasksModule)
       },
+      {
+        path: 'organizations',
+        loadChildren: () => import('./pages/organizations/organizations.module').then((m) => m.OrganizationsModule)
+      }
     ],
     canActivate: [AuthGuard]
   },
