@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NeOrganizationComponent } from './ne-organization/ne-organization.component';
+import { DirectivesModule } from 'src/directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { NeOrganizationComponent } from './ne-organization/ne-organization.compo
     MatButtonModule,
     MatInputModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    DirectivesModule
   ]
 })
 export class OrganizationsModule { }

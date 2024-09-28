@@ -8,19 +8,58 @@
 <mat-dialog-content>
   <form [formGroup]="organizationForm">
     <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Título</mat-label>
-      <input matInput formControlName="title" maxlength="50">
-      <mat-error *ngIf="organizationForm.get('title')?.hasError('required') && organizationForm.get('title')?.touched">
-        El título es requerido
-      </mat-error>
-      <mat-error *ngIf="organizationForm.get('title')?.hasError('minlength') && organizationForm.get('title')?.touched">
-        El título debe tener al menos 5 caracteres
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" maxlength="50">
+      <mat-error *ngIf="organizationForm.get('name')?.hasError('required') && organizationForm.get('name')?.touched">
+        El nombre es requerido
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Descripción</mat-label>
-      <textarea matInput formControlName="description" rows="3"></textarea>
+      <mat-label>Persona de contacto</mat-label>
+      <input matInput formControlName="contactPerson" maxlength="50">
+      <mat-error
+        *ngIf="organizationForm.get('contactPerson')?.hasError('required') && organizationForm.get('contactPerson')?.touched">
+        La persona de contacto es requerida
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Correo de contacto</mat-label>
+      <input matInput formControlName="contactEmail" maxlength="50">
+      <mat-error
+        *ngIf="organizationForm.get('contactEmail')?.hasError('required') && organizationForm.get('contactEmail')?.touched">
+        El correo de contacto es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Telefono</mat-label>
+      <input matInput formControlName="phone" maxlength="50" numbersOnly>
+      <mat-error *ngIf="organizationForm.get('phone')?.hasError('required') && organizationForm.get('phone')?.touched">
+        El telefono es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Dirección</mat-label>
+      <input matInput formControlName="address" maxlength="50">
+      <mat-error
+        *ngIf="organizationForm.get('address')?.hasError('required') && organizationForm.get('address')?.touched">
+        La dirección es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Tipo</mat-label>
+      <mat-select matInput formControlName="type">
+        <mat-option *ngFor="let data of typeOrganizations" [value]="data.id">
+          {{data.name}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="organizationForm.get('type')?.hasError('required') && organizationForm.get('type')?.touched">
+        El tipo es requerido
+      </mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>

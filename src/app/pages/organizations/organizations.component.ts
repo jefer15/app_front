@@ -30,7 +30,6 @@ export class OrganizationsComponent implements OnInit {
   getData() {
     this._organizationService.organizations().subscribe({
       next: (res: any) => {
-        console.log(res.data)
         this.dataSource.data = res.data;
       }
     })
@@ -66,8 +65,8 @@ export class OrganizationsComponent implements OnInit {
     this._organizationService.deleteOrganization(row.id).subscribe({
       next: (res: any) => {
         Swal.fire({
-          title: "Tarea",
-          text: "Se ha eliminado exitosamente la tarea",
+          title: "Organizaciones",
+          text: "Se ha eliminado exitosamente la organización",
           icon: 'success',
           confirmButtonText: 'Ok',
           showConfirmButton: true,
@@ -78,8 +77,8 @@ export class OrganizationsComponent implements OnInit {
       },
       error: (err: any) => {
         Swal.fire({
-          title: "Tarea",
-          text: "No se eliminó la tarea porque está en estado Pendiente",
+          title: "Organizaciones",
+          text: "No se eliminó la organización",
           icon: 'error',
           confirmButtonText: 'Ok',
           showConfirmButton: true,

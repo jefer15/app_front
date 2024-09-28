@@ -12,6 +12,10 @@ import { OrganizationsService } from 'src/app/services/organizations/organizatio
 })
 export class NeOrganizationComponent {
   organizationForm!: FormGroup;
+  typeOrganizations = [
+    { id: "P", name: "Pri" },
+    { id: "C", name: "Cri" },
+  ];
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -26,8 +30,12 @@ export class NeOrganizationComponent {
 
   constructorForm() {
     this.organizationForm = this.fb.group({
-      title: [this.data ? this.data.title : '', [Validators.required, Validators.minLength(5)]],
-      description: [this.data ? this.data.description : '']
+      name: [this.data ? this.data.name : '', [Validators.required]],
+      contactPerson: [this.data ? this.data.contactPerson : '', [Validators.required]],
+      contactEmail: [this.data ? this.data.contactEmail : '', [Validators.required, Validators.email]],
+      phone: [this.data ? this.data.phone : '', [Validators.required]],
+      address: [this.data ? this.data.address : '', [Validators.required]],
+      type: [this.data ? this.data.type : '', [Validators.required]]
     })
   }
 
@@ -47,69 +55,69 @@ export class NeOrganizationComponent {
       })
       return
     }
-      let dataOrganization = {
-        title: this.organizationForm.get('title')?.value,
-        description: this.organizationForm.get('description')?.value,
-      }
-      if (this.data?.id) {
-        this._organizationService.updateOrganization(this.data?.id, dataOrganization).subscribe({
-          next: (res: any) => {
-            Swal.fire({
-              title: "Tarea",
-              text: "Se ha actualizado exitosamente la tarea",
-              icon: 'success',
-              confirmButtonText: 'Ok',
-              showConfirmButton: true,
-              showDenyButton: false
-            }).then((result) => {
-              this.close();
-            });
-          },
-          error: (err: any) => {
-            if (err.error.code === 3) {
-              Swal.fire({
-                title: "Tarea",
-                text: "No se puedo actualizar la tarea porque el nombre ya existe",
-                icon: 'info',
-                confirmButtonText: 'Ok',
-                showConfirmButton: true,
-                showDenyButton: false
-              }).then((result) => {
-                this.close();
-              });
-            }
-          }
-        })
-      } else {
-        this._organizationService.createOrganization(dataOrganization).subscribe({
-          next: (res: any) => {
-            Swal.fire({
-              title: "Tarea",
-              text: "Se ha creado exitosamente la tarea",
-              icon: 'success',
-              confirmButtonText: 'Ok',
-              showConfirmButton: true,
-              showDenyButton: false
-            }).then((result) => {
-              this.close();
-            });
-          },
-          error: (err: any) => {
-            if (err.error.code === 3) {
-              Swal.fire({
-                title: "Tarea",
-                text: "No se puedo crear la tarea porque el nombre ya existe",
-                icon: 'info',
-                confirmButtonText: 'Ok',
-                showConfirmButton: true,
-                showDenyButton: false
-              }).then((result) => {
-                this.close();
-              });
-            }
-          }
-        })
-      }
+    let dataOrganization = {
+      name: this.organizationForm.get('name')?.value,
+      contactPerson: this.organizationForm.get('contactPerson')?.value,
+      contactEmail: this.organizationForm.get('contactEmail')?.value,
+      phone: this.organizationForm.get('phone')?.value,
+      address: this.organizationForm.get('address')?.value,
+      type: this.organizationForm.get('type')?.value
+    }
 
+    if (this.data?.id) {
+      this._organizationService.updateOrganization(this.data?.id, dataOrganization).subscribe({
+        next: (res: any) => {
+          Swal.fire({
+            title: "Organizaciones",
+            text: "Se ha actualizado exitosamente la organización",
+            icon: 'success',
+            confirmButtonText: 'Ok',
+            showConfirmButton: true,
+            showDenyButton: false
+          }).then((result) => {
+            this.close();
+          });
+        },
+        error: (err: any) => {
+          Swal.fire({
+            title: "Organizaciones",
+            text: "No se puedo actualizar la organización",
+            icon: 'info',
+            confirmButtonText: 'Ok',
+            showConfirmButton: true,
+            showDenyButton: false
+          }).then((result) => {
+            this.close();
+          });
+        }
+      })
+    } else {
+      this._organizationService.createOrganization(dataOrganization).subscribe({
+        next: (res: any) => {
+          Swal.fire({
+            title: "Organizaciones",
+            text: "Se ha creado exitosamente la organización",
+            icon: 'success',
+            confirmButtonText: 'Ok',
+            showConfirmButton: true,
+            showDenyButton: false
+          }).then((result) => {
+            this.close();
+          });
+        },
+        error: (err: any) => {
+          Swal.fire({
+            title: "Organizaciones",
+            text: "No se puedo crear la organización",
+            icon: 'info',
+            confirmButtonText: 'Ok',
+            showConfirmButton: true,
+            showDenyButton: false
+          }).then((result) => {
+            this.close();
+          });
+        }
+      })
+    }
   }
 }
