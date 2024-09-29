@@ -30,7 +30,14 @@ export class FilesComponent implements OnInit{
   getData(){
     this._filesService.inventories().subscribe({
       next:(res:any)=>{
-        this.dataSource.data = res.data;
+        const transformedData = res.data.map((inventory: any) => {
+          return {
+            ...inventory,
+            transactionType: inventory.transactionType === 'E' ? 'Entrada' : inventory.transactionType === 'S' ? 'Salida' : inventory.transactionType
+          };
+        });
+
+        this.dataSource.data = transformedData;
       }
     })
   }
@@ -73,7 +80,6 @@ export class FilesComponent implements OnInit{
       transactionType: row.transactionType,
       quantity: row.quantity,
       unitPrice: row.unitPrice,
-      address: row.address,
       description: row.description,
       mark: row.mark,
       transactionDate: this.excelDateToJSDate(row.transactionDate)
@@ -92,29 +98,28 @@ export class FilesComponent implements OnInit{
   }
 
   addInventory(inventoryData: any[]) {
-    console.log("data:",inventoryData)
-    // this._filesService.createInventory(inventoryData).subscribe({
-    //   next: (res: any) => {
-    //     Swal.fire({
-    //       title: "Inventario",
-    //       text: "Se ha guardado exitosamente",
-    //       icon: 'success',
-    //       confirmButtonText: 'Ok',
-    //       showConfirmButton: true,
-    //       showDenyButton: false
-    //     }).then((result) => {
-    //       this.getData();
-    //     });
-    //   },
-    //   error: (err) => {
-    //     Swal.fire({
-    //       title: "Error",
-    //       text: "No se pudo guardar el inventario",
-    //       icon: 'error',
-    //       confirmButtonText: 'Ok'
-    //     });
-    //   }
-    // });
+    this._filesService.createInventory(inventoryData).subscribe({
+      next: (res: any) => {
+        Swal.fire({
+          title: "Inventario",
+          text: "Se ha guardado exitosamente",
+          icon: 'success',
+          confirmButtonText: 'Ok',
+          showConfirmButton: true,
+          showDenyButton: false
+        }).then((result) => {
+          this.getData();
+        });
+      },
+      error: (err) => {
+        Swal.fire({
+          title: "Error",
+          text: "No se pudo guardar el inventario",
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        });
+      }
+    });
   }
 
 }

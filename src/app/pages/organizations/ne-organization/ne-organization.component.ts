@@ -13,8 +13,8 @@ import { OrganizationsService } from 'src/app/services/organizations/organizatio
 export class NeOrganizationComponent {
   organizationForm!: FormGroup;
   typeOrganizations = [
-    { id: "P", name: "Pri" },
-    { id: "C", name: "Cri" },
+    { id: "P", name: "Privada" },
+    { id: "C", name: "Publica" },
   ];
   constructor(
     private fb: FormBuilder,
