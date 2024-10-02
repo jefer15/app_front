@@ -31,6 +31,10 @@ const routes: Routes = [
       {
         path: 'organizations',
         loadChildren: () => import('./pages/organizations/organizations.module').then((m) => m.OrganizationsModule)
+      },
+      {
+        path: 'graphics',
+        loadChildren: ()=> import('./pages/graphics/graphics.module').then((m)=> m.GraphicsModule)
       }
     ],
     canActivate: [AuthGuard]
