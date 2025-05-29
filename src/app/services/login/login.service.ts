@@ -11,7 +11,36 @@ import { Router } from "@angular/router";
 export class LoginService {
   private tokenSubject = new BehaviorSubject<string | null>(this.getToken());
   private userSubject = new BehaviorSubject<any>(this.getUser());
+
   path = "/auth";
+  menuItems = [
+    {
+      title: 'Usuarios',
+      path: '/users',
+      icon: 'person',
+    },
+    {
+      title: 'Inventarios',
+      path: '/files',
+      icon: 'inventory',
+    },
+    {
+      title: 'Tareas',
+      path: '/tasks',
+      icon: 'assignment',
+    },
+    {
+      title: 'Organizaciones',
+      path: '/organizations',
+      icon: 'business',
+    },
+    {
+      title: 'Gráficas',
+      path: '/graphics',
+      icon: 'bar_chart',
+    }
+  ];
+  private menuItemsSubject = new BehaviorSubject<any[]>(this.getMenuItems());
 
   constructor(private _http: HttpClient, private router: Router) { }
 
@@ -21,6 +50,7 @@ export class LoginService {
       if(response?.data?.token){
         this.setToken(response.data.token);
         this.setUser(response.data.user);
+        this.setMenuItems(this.menuItems)
       }
       return response;
     }));
@@ -49,6 +79,7 @@ export class LoginService {
     sessionStorage.clear();
     this.tokenSubject.next(null);
     this.userSubject.next(null);
+    this.menuItemsSubject.next([]);
     this.router.navigate(["/login"]);
   }
 
@@ -58,5 +89,19 @@ export class LoginService {
 
   getUserSubject(): BehaviorSubject<any> {
     return this.userSubject;
+  }
+
+  getMenuItems(): any[] {
+    const menuItems = localStorage.getItem('menuItems');
+    return menuItems ? JSON.parse(menuItems) : [];
+  }
+
+  setMenuItems(menuItems: any[]): void {
+    localStorage.setItem('menuItems', JSON.stringify(menuItems));
+    this.menuItemsSubject.next(menuItems);
+  }
+
+  getMenuItemsSubject(): BehaviorSubject<any[]> {
+    return this.menuItemsSubject;
   }
 }

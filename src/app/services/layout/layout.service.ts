@@ -7,7 +7,7 @@ import { map, shareReplay } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class LayoutService {
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe('(max-width: 800px)')
   .pipe(
     map(result => result.matches),
     shareReplay()
